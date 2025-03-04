@@ -4,7 +4,7 @@ import { t } from "@lingui/macro"
 
 class Index extends PureComponent {
   render() {
-    return <Redirect to={t`/dashboard`} />
+    return <Redirect to="demo" />
   }
 }
 

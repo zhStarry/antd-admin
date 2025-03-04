@@ -34,7 +34,7 @@ export default modelExtend(model, {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         if (
-          pathToRegexp('/dashboard').exec(pathname) ||
+          pathToRegexp('/procurement').exec(pathname) ||
           pathToRegexp('/').exec(pathname)
         ) {
           dispatch({ type: 'query' })
@@ -45,31 +45,41 @@ export default modelExtend(model, {
   },
   effects: {
     *query({ payload }, { call, put }) {
-      const data = yield call(queryDashboard, parse(payload))
-      yield put({
-        type: 'updateState',
-        payload: data,
-      })
-    },
-    *queryWeather({ payload = {} }, { call, put }) {
-      payload.location = 'shenzhen'
-      const result = yield call(queryWeather, payload)
-      const { success } = result
-      if (success) {
-        const data = result.results[0]
-        const weather = {
-          city: data.location.name,
-          temperature: data.now.temperature,
-          name: data.now.text,
-          icon: `//cdn.antd-admin.zuiidea.com/web/icons/3d_50/${data.now.code}.png`,
-        }
+      try{
+        const data = yield call(queryDashboard, parse(payload))
         yield put({
           type: 'updateState',
-          payload: {
-            weather,
-          },
+          payload: data,
         })
+      } catch(e){
+        console.log(e)
       }
+
+    },
+    *queryWeather({ payload = {} }, { call, put }) {
+      try {
+        payload.location = 'shenzhen'
+        const result = yield call(queryWeather, payload)
+        const { success } = result
+        if (success) {
+          const data = result.results[0]
+          const weather = {
+            city: data.location.name,
+            temperature: data.now.temperature,
+            name: data.now.text,
+            icon: `//cdn.antd-admin.zuiidea.com/web/icons/3d_50/${data.now.code}.png`,
+          }
+          yield put({
+            type: 'updateState',
+            payload: {
+              weather,
+            },
+          })
+        }
+      } catch(e) {
+        console.log(e)
+      }
+      
     },
   },
 })

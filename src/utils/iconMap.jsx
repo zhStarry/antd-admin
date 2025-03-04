@@ -12,6 +12,11 @@ import {
   LineOutlined,
   BarChartOutlined,
   AreaChartOutlined,
+  AccountBookOutlined,
+  MoneyCollectOutlined,
+  PropertySafetyOutlined,
+  RedEnvelopeOutlined,
+  TransactionOutlined
 } from '@ant-design/icons'
 
 export default {
@@ -28,4 +33,11 @@ export default {
   user: <UserOutlined />,
   api: <ApiOutlined />,
   edit: <EditOutlined />,
+  采购管理: <AccountBookOutlined />,
+  原材料管理: <MoneyCollectOutlined />,
+  薪资发放: <PayCircleOutlined />,
+  月营业额: <PropertySafetyOutlined />,
+  库存盘点: <RedEnvelopeOutlined />,
+  社保医疗: <TransactionOutlined />,
+  毛利统计: <PayCircleOutlined />
 }

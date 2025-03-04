@@ -26,22 +26,27 @@ export default modelExtend(pageModel, {
 
   effects: {
     *query({ payload }, { call, put }) {
-      const data = yield call(queryPostList, payload)
-      if (data.success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: data.data,
-            pagination: {
-              current: Number(payload.page) || 1,
-              pageSize: Number(payload.pageSize) || 10,
-              total: data.total,
+      try {
+        const data = yield call(queryPostList, payload)
+        if (data.success) {
+          yield put({
+            type: 'querySuccess',
+            payload: {
+              list: data.data,
+              pagination: {
+                current: Number(payload.page) || 1,
+                pageSize: Number(payload.pageSize) || 10,
+                total: data.total,
+              },
             },
-          },
-        })
-      } else {
-        throw data
+          })
+        } else {
+          throw data
+        }
+      } catch (e) {
+        console.log(e)
       }
+
     },
   },
 })

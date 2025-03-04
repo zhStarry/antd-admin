@@ -1,6 +1,6 @@
 module.exports = {
-  siteName: 'AntD Admin',
-  copyright: 'Ant Design Admin  ©2020 zuiidea',
+  siteName: '佳圣餐饮',
+  copyright: '佳圣餐饮管理系统',
   logoPath: '/logo.svg',
   apiPrefix: '/api/v1',
   fixedHeader: true, // sticky primary layout header

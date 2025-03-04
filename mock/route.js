@@ -1,4 +1,5 @@
 import { Constant } from './_utils'
+import routers from '../src/router'
 const { ApiPrefix } = Constant
 
 const database = [
@@ -150,6 +151,6 @@ const database = [
 
 module.exports = {
   [`GET ${ApiPrefix}/routes`](req, res) {
-    res.status(200).json(database)
+    res.status(200).json(routers)
   },
 }

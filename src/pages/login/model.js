@@ -1,5 +1,7 @@
 import { history } from 'umi'
+import { message } from 'antd'
 const { pathToRegexp } = require("path-to-regexp")
+import userApi from '../../services/userApi'
 import api from 'api'
 
 const { loginUser } = api
@@ -18,20 +20,20 @@ export default {
   // },
   effects: {
     *login({ payload }, { put, call, select }) {
-      const data = yield call(loginUser, payload)
-      const { locationQuery } = yield select(_ => _.app)
-      if (data.success) {
-        const { from } = locationQuery
-        yield put({ type: 'app/query' })
-        if (!pathToRegexp('/login').exec(from)) {
-          if (['', '/'].includes(from)) history.push('/dashboard')
-          else history.push(from)
+      try {
+        const data = yield call(userApi.loginApi, payload)
+        if (data.code === "200"){
+          const { token, refreshToken } = data.data;
+          localStorage.setItem("token", token)
+          localStorage.setItem("refreshToken", refreshToken)
         } else {
-          history.push('/dashboard')
+          message.error(data.msg)
         }
-      } else {
-        throw data
+        yield put({ type: 'app/query' })
+      } catch(e) {
+        console.log(e);
       }
+
     },
   },
 }

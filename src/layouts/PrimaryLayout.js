@@ -12,6 +12,7 @@ import { config, getLocale } from 'utils'
 import Error from '../pages/404'
 import styles from './PrimaryLayout.less'
 import store from 'store'
+import routers from '../router'
 
 const { Content } = Layout
 const { Header, Bread, Sider } = MyLayout
@@ -49,8 +50,9 @@ class PrimaryLayout extends PureComponent {
     const { app, location, dispatch, children } = this.props
     const { theme, collapsed, notifications } = app
     const user = store.get('user') || {}
-    const permissions = store.get('permissions') || {}
-    const routeList = store.get('routeList') || []
+    // const permissions = store.get('permissions') || {}
+    //const routeList = store.get('routeList') || []
+    const routeList = routers
     const { isMobile } = this.state
     const { onCollapseChange } = this
 
@@ -74,9 +76,9 @@ class PrimaryLayout extends PureComponent {
     )
 
     // Query whether you have permission to enter this page
-    const hasPermission = currentRoute
-      ? permissions.visit.includes(currentRoute.id)
-      : false
+    // const hasPermission = currentRoute
+    //   ? permissions.visit.includes(currentRoute.id)
+    //   : false
 
     // MenuParentId is equal to -1 is not a available menu.
     const menus = newRouteList.filter(_ => _.menuParentId !== '-1')
@@ -140,7 +142,8 @@ class PrimaryLayout extends PureComponent {
             <Header {...headerProps} />
             <Content className={styles.content}>
               <Bread routeList={newRouteList} />
-              {hasPermission ? children : <Error />}
+              {children}
+              {/* {hasPermission ? children : <Error />} */}
             </Content>
             <FloatButton.BackTop
               className={styles.backTop}

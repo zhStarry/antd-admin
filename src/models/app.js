@@ -15,7 +15,7 @@ const { queryRouteList, logoutUser, queryUserInfo } = api
 const goDashboard = () => {
   if (pathToRegexp(['/', '/login']).exec(window.location.pathname)) {
     history.push({
-      pathname: '/dashboard',
+      pathname: '/procurement',
     })
   }
 }
@@ -27,9 +27,9 @@ export default {
       {
         id: '1',
         icon: 'laptop',
-        name: 'Dashboard',
+        name: 'demo',
         zhName: '仪表盘',
-        router: '/dashboard',
+        router: '/procurement',
       },
     ],
     locationPathname: '',
@@ -77,62 +77,46 @@ export default {
     },
   },
   effects: {
-    *query({ payload }, { call, put, select }) {
-      // store isInit to prevent query trigger by refresh
+    *query() {
       const isInit = store.get('isInit')
-      if (isInit) {
-        goDashboard()
-        return
-      }
-      const { locationPathname } = yield select(_ => _.app)
-      const { success, user } = yield call(queryUserInfo, payload)
-      if (success && user) {
-        const { list } = yield call(queryRouteList)
-        const { permissions } = user
-        let routeList = list
-        if (
-          permissions.role === ROLE_TYPE.ADMIN ||
-          permissions.role === ROLE_TYPE.DEVELOPER
-        ) {
-          permissions.visit = list.map(item => item.id)
-        } else {
-          routeList = list.filter(item => {
-            const cases = [
-              permissions.visit.includes(item.id),
-              item.mpid
-                ? permissions.visit.includes(item.mpid) || item.mpid === '-1'
-                : true,
-              item.bpid ? permissions.visit.includes(item.bpid) : true,
-            ]
-            return cases.every(_ => _)
-          })
-        }
-        store.set('routeList', routeList)
-        store.set('permissions', permissions)
-        store.set('user', user)
-        store.set('isInit', true)
-        goDashboard()
-      } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
+      console.log(isInit)
+      // if (isInit) {
+      //   console.log(123, isInit, 84)
+      //   goDashboard()
+      //   return
+      // }
+
+      const token = localStorage.getItem("token")
+
+      if(token !== "null" && token !== "undefined"){
+        store.set('isInit', true, 92)
         history.push({
-          pathname: '/login',
-          search: stringify({
-            from: locationPathname,
-          }),
+          pathname: '/procurement',
+        })
+      } else {
+        console.log(123, isInit, 97)
+          history.push({
+            pathname: '/login'
         })
       }
     },
 
     *signOut({ payload }, { call, put }) {
-      const data = yield call(logoutUser)
-      if (data.success) {
-        store.set('routeList', [])
-        store.set('permissions', { visit: [] })
-        store.set('user', {})
-        store.set('isInit', false)
-        yield put({ type: 'query' })
-      } else {
-        throw data
+      try {
+        const data = yield call(logoutUser)
+        if (data.success) {
+          store.set('routeList', [])
+          store.set('permissions', { visit: [] })
+          store.set('user', {})
+          store.set('isInit', false)
+          yield put({ type: 'query' })
+        } else {
+          throw data
+        }
+      } catch(e) {
+        console.log(e)
       }
+
     },
   },
   reducers: {

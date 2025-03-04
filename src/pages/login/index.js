@@ -7,6 +7,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import { t, Trans } from "@lingui/macro"
 import { setLocale } from 'utils'
 import config from 'utils/config'
+import { encrypt } from '../../utils/rsaUtils'
 
 import styles from './index.less'
 
@@ -17,9 +18,13 @@ class Login extends PureComponent {
 
   render() {
     const { dispatch, loading } = this.props
-    
+    console.log(loading, 20)
     const handleOk = values => {
-      dispatch({ type: 'login/login', payload: values })
+      
+      dispatch({ type: 'login/login', payload: {
+        phone: values.phone,
+        password: encrypt(values.password)
+      } })
     }
     let footerLinks = [
       {
@@ -51,10 +56,10 @@ class Login extends PureComponent {
           <Form
             onFinish={handleOk}
             >
-            <FormItem name="username" 
+            <FormItem name="phone" 
               rules={[{ required: true }]} hasFeedback>
                 <Input
-                  placeholder={t`Username`}
+                  placeholder="手机号"
                 />
             </FormItem>
             <Trans id="Password" render={({translation}) => (
